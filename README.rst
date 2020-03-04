@@ -56,4 +56,4 @@ Get started
 ============
 View the GET_STARTED_ file.
 
-.. _GET_STARTED: https://github.com/iotanbo/cpplibhub/blob/master/doc/GET_STARTED.md
+.. _GET_STARTED: https://github.com/iotanbo/cpplibhub/blob/master/docs/GET_STARTED.md

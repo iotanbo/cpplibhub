@@ -1,13 +1,13 @@
-# Zen of cpplibhub
+# Getting started with cpplibhub
 
 
 ### Things must be as simple as possible, but not simpler
 
-This famous Einstein advice is indispensable. `cpplibhub` is trying to keep balance between too complex and too simple.
+Einstein's advice is indispensable. `cpplibhub` is trying to keep balance between too complex approach that is barely usable, and too simple that can't provide the required functionality.
 
 ### Flat is better than nested
 
-This is an important point from Zen of Python that applies to `cpplibhub` as well. Deep nesting begets a lot of problems, like more complex dependency graphs and redundancy in disk storage usage if same modules are present more than once on different hierarchy level.
+Zen of Python applies to `cpplibhub` as well. Deep nesting begets a lot of problems, like more complex dependency graphs and redundancy in disk storage usage if same modules are present more than once on different hierarchy levels.
 
 ### User experience matters
 
@@ -37,20 +37,24 @@ Modules that can be shared between projects, must be shared.
 cpplibhub # home directory for all libraries and projects
 │
 ├─ DEV 	# libraries that are in development; may be a root for IDE like CLion
-│	│
-│  	└─ mylib@iotanbo  # project roots
-│		│
-│		├─ common  # files that are common for all configurations
-│		│	├─  v1.0.1  # version
-│		│	└─  v1.2.1  # another version
-│		│
-│    	└─ lib  # compiled libraries will be located heresssssssss
-│			└─ v1.0.1    # version
-│					└─ linux  # target platform
-│							└─ amd64  # target arch
-│								└─ gcc9  # compiler set name
-│									└─ rel  # configuration
-│										└─ static  # link type
+│  │
+│  └─ mylib@iotanbo  # cpplibhub project root
+│        │
+│        ├─ proj  # project directory, usually a git repository
+│        │
+│        ├─ dist  # binary distribution package if any
+│        │
+│        ├─ common  # files that are common for all configurations
+│        │	├─  v1.0.1  # version
+│        │	└─  v1.2.1  # another version
+│        │
+│        └─ lib  # compiled libraries
+│            └─ v1.2.1  # version
+│                  └─ linux  # target platform
+│                       └─ amd64  # target arch
+│                           └─ gcc9  # compiler set name
+│                                └─ rel  # configuration
+│                                    └─ static  # link type
 
 ```
 
