@@ -14,18 +14,35 @@ Why does this file exist, and why not put this in __main__?
 
   Also see (1) from http://click.pocoo.org/5/setuptools/#setuptools-integration
 """
-import sys
+# import sys
+import click
 
 
-def main(argv=sys.argv):
+def create_new_project(*, interactive, project_name):
+    if interactive:
+        project_name = input("Enter project name: ")
+
+    print(f"* Creating project '{project_name}'")
+
+
+@click.command()
+@click.version_option()
+@click.argument('create', default="")
+@click.option("--project_name", default="",
+              help="Specify project name.")
+@click.option("-i", "--interactive", default=False, is_flag=True,
+              help="Interactive project creation mode. User has to answer the questions.")
+def main(*,  # argv=sys.argv,
+         create,
+         interactive,
+         project_name,
+         **kwargs
+         ):
     """
-    Args:
-        argv (list): List of arguments
-
-    Returns:
-        int: A return code
-
-    Does stuff.
+    Simple dependency management tool for C++ and C projects.
     """
-    print(argv)
+
+    if create:
+        create_new_project(interactive=interactive, project_name=project_name)
+
     return 0

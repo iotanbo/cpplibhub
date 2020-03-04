@@ -25,20 +25,21 @@ Overview
     :alt: Coverage Status
     :target: https://codecov.io/github/iotanbo/cpplibhub
 
-.. |commits-since| image:: https://img.shields.io/github/commits-since/iotanbo/cpplibhub/v0.0.0.svg
+.. |commits-since| image:: https://img.shields.io/github/commits-since/iotanbo/cpplibhub/v0.0.1.svg
     :alt: Commits since latest release
-    :target: https://github.com/iotanbo/cpplibhub/compare/v0.0.0...master
+    :target: https://github.com/iotanbo/cpplibhub/compare/v0.0.1...master
 
 
 
 .. end-badges
 
-Dependency management tool for C++ and C projects
+Dependency management tool for C++ and C projects.
 
 * Free software: MIT license
 
 Installation
 ============
+**Please note that this is currently a draft. It is not recommended to install it except for developers and testers.**
 
 ::
 
@@ -49,38 +50,10 @@ You can also install the in-development version with::
     pip install https://github.com/iotanbo/cpplibhub/archive/master.zip
 
 
-Documentation
-=============
 
 
-To use the project:
+Get started
+============
+View the GET_STARTED_ file.
 
-.. code-block:: python
-
-    import cpplibhub
-    cpplibhub.longest()
-
-
-Development
-===========
-
-To run the all tests run::
-
-    tox
-
-Note, to combine the coverage data from all the tox environments run:
-
-.. list-table::
-    :widths: 10 90
-    :stub-columns: 1
-
-    - - Windows
-      - ::
-
-            set PYTEST_ADDOPTS=--cov-append
-            tox
-
-    - - Other
-      - ::
-
-            PYTEST_ADDOPTS=--cov-append tox
+.. _GET_STARTED: https://github.com/iotanbo/cpplibhub/doc/GET_STARTED.md

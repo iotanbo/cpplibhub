@@ -25,7 +25,7 @@ def read(*names, **kwargs):
 
 setup(
     name='cpplibhub',
-    version='0.0.0',
+    version='0.0.1',
     license='MIT',
     description='Dependency management tool for C++ and C projects',
     long_description='%s\n%s' % (
@@ -73,6 +73,7 @@ setup(
     python_requires='>=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*',
     install_requires=[
         # eg: 'aspectlib==1.1.1', 'six>=1.7',
+        'click',
     ],
     extras_require={
         # eg:
