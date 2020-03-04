@@ -25,7 +25,7 @@ def read(*names, **kwargs):
 
 setup(
     name='cpplibhub',
-    version='0.0.1',
+    version='0.0.2',
     license='MIT',
     description='Dependency management tool for C++ and C projects',
     long_description='%s\n%s' % (

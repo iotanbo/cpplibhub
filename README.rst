@@ -25,9 +25,9 @@ Overview
     :alt: Coverage Status
     :target: https://codecov.io/github/iotanbo/cpplibhub
 
-.. |commits-since| image:: https://img.shields.io/github/commits-since/iotanbo/cpplibhub/v0.0.1.svg
+.. |commits-since| image:: https://img.shields.io/github/commits-since/iotanbo/cpplibhub/v0.0.2.svg
     :alt: Commits since latest release
-    :target: https://github.com/iotanbo/cpplibhub/compare/v0.0.1...master
+    :target: https://github.com/iotanbo/cpplibhub/compare/v0.0.2...master
 
 
 
@@ -56,4 +56,4 @@ Get started
 ============
 View the GET_STARTED_ file.
 
-.. _GET_STARTED: https://github.com/iotanbo/cpplibhub/doc/GET_STARTED.md
+.. _GET_STARTED: https://github.com/iotanbo/cpplibhub/blob/master/doc/GET_STARTED.md
