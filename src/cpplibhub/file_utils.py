@@ -390,40 +390,93 @@ def execute_shell_cmd(cmd_and_args):
 # ---------------------------------------------------------------------------------------------------------------------
 # Zip, tar, gzip archives
 
-def unzip_tar_gz(file, dest_dir, remove_after_extract=False):
+def unzip_tar_gz(file, dest_dir, remove_after_extract=False) -> dict:
+    """
+    Unzip .tar.gz archive into the `dest_dir`
+    :param file: source .tar.gz archive
+    :param dest_dir: destination dir
+    :param remove_after_extract:
+    :return: Dict:
+            ["error"]: str - empty string if success or error message otherwise
+    """
+    result = {"error": ""}
+    if file_exists(dest_dir):
+        result["error"] = "destination is not directory: " + str(dest_dir)
+        return result
+
     if not file_exists(file):
-        return
+        result["error"] = "source file not exists"
+        return result
+
     if not dir_exists(dest_dir):
-        create_path_noexcept(dest_dir)
-    with tarfile.open(file, 'r:*') as t:
-        t.extractall(dest_dir)
-        t.close()
-    if remove_after_extract:
-        remove_file_noexcept(file)
+        if create_path_noexcept(dest_dir)["error"]:
+            result["error"] = "can't create destination directory: " + str(dest_dir)
+            return result
+    try:
+        with tarfile.open(file, 'r:*') as t:
+            t.extractall(dest_dir)
+            t.close()
+        if remove_after_extract:
+            remove_file_noexcept(file)
+    except OSError as e:
+        result["error"] = str(e) + str(dest_dir)
+        return result
+    return result
 
 
-def zip_file_tar_gz(file, dest_file, remove_after=False):
+def zip_file_tar_gz(file, dest_file, remove_after=False) -> dict:
+    """
+    Create .tar.zip archive from file.
+    :param file: source file
+    :param dest_file: destination file to be written
+    :param remove_after: if True, source file will be removed after archive created
+    :return: Dict:
+            ["error"]: str - empty string if success or error message otherwise
+    """
+    result = {"error": ""}
     if not file_exists(file):
-        return
-    with tarfile.open(dest_file, "w:gz") as tar:
-        tar.add(file, arcname=os.path.basename(file))
-    if remove_after:
-        remove_file(file)
+        result["error"] = "source file not exists: " + str(file)
+        return result
+    try:
+        with tarfile.open(dest_file, "w:gz") as tar:
+            tar.add(file, arcname=os.path.basename(file))
+        if remove_after:
+            remove_file(file)
+    except OSError as e:
+        result["error"] = str(e) + " when creating file " + str(dest_file)
+        return result
+    return result
 
 
-def zip_dir_tar_gz(source_dir, dest_file, remove_after=False):
+def zip_dir_tar_gz(source_dir: str, dest_file: str, remove_after=False) -> dict:
+    """
+    Create .tar.zip archive from directory tree.
+    :param source_dir:
+    :param dest_file:
+    :param remove_after: if True, source dir will be removed after archive created
+    :return: Dict:
+            ["error"]: str - empty string if success or error message otherwise
+    """
+    result = {"error": ""}
     if not dir_exists(source_dir):
-        return
-    with tarfile.open(dest_file, "w:gz") as tar:
-        tar.add(source_dir, arcname=os.path.basename(source_dir))
-    if remove_after:
-        remove_dir_noexcept(source_dir)
+        print(f"** TRACING source_dir: {source_dir}")
+        result["error"] = "source directory not exists: " + str(source_dir)
+        return result
+    try:
+        with tarfile.open(dest_file, "w:gz") as tar:
+            tar.add(source_dir, arcname=os.path.basename(source_dir))
+        if remove_after:
+            remove_dir_noexcept(source_dir)
+    except OSError as e:
+        result["error"] = str(e) + " when creating file " + str(dest_file)
+        return result
+    return result
 
 
 # ---------------------------------------------------------------------------------------------------------------------
 # File download
 
-def download_to_file(url, dest_file) -> dict:
+def download_into_file(url, dest_file) -> dict:
     """
     Download url synchronously and save result into file.
     :param url:
