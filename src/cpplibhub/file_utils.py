@@ -6,6 +6,8 @@ import tarfile
 import urllib.request
 from urllib import error
 
+# import symlink
+
 
 def file_exists(path_to_file) -> bool:
     """
@@ -23,8 +25,46 @@ def dir_exists(path_to_dir) -> bool:
     return os.path.isdir(path_to_dir)
 
 
+def create_symlink_noexcept(src, dest) -> dict:
+    """
+    Create a symlink to src called `dest`
+    :param src: file, directory or symlink
+    :param dest: name of symlink to be created
+    :return: Dict:
+            ["error"]: str - empty string if success, error message otherwise
+    """
+    result = {"error": ""}
+
+    if not get_item_type(src)["exists"]:
+        result["error"] = "source file or directory does not exist"
+        return result
+    try:
+        os.symlink(src, dest)
+    except OSError as e:
+        result["error"] = str(e)
+        return result
+    return result
+
+
 def symlink_exists(path) -> bool:
     return os.path.islink(path)
+
+
+def remove_symlink_noexcept(path) -> dict:
+    """
+    Remove symlink from the file system (do not raise exceptions).
+    :param path: string
+    :return: Dict:
+            ['error']: empty string if the link was removed or not exists,
+                    or error message otherwise;
+    """
+    result = {'error': ''}
+    if symlink_exists(path):
+        try:
+            os.unlink(path)
+        except OSError as e:
+            result['error'] = str(e)
+    return result
 
 
 def path_base_and_leaf(path) -> tuple:
@@ -116,23 +156,6 @@ def remove_file_noexcept(filename) -> dict:
     if file_exists(filename):
         try:
             os.remove(filename)
-        except OSError as e:
-            result['error'] = str(e)
-    return result
-
-
-def remove_symlink_noexcept(path) -> dict:
-    """
-    Remove symlink from the file system (do not raise exceptions).
-    :param path: string
-    :return: Dict:
-            ['error']: empty string if the link was removed or not exists,
-                    or error message otherwise;
-    """
-    result = {'error': ''}
-    if symlink_exists(path):
-        try:
-            os.unlink(path)
         except OSError as e:
             result['error'] = str(e)
     return result
@@ -265,33 +288,34 @@ def get_subdirs(path) -> dict:
 
 def get_file_list(path) -> dict:
     """
-    List of files located in the directory.
+    List of files located in the directory. The list includes symlinks,
+    but does not include directories.
     :param path:
     :return: Dict:
-            ['files']: list of files located in the directory;
+            ['file_list']: list of files located in the directory;
             ['error']: empty string if success or error message otherwise;
     """
-    result = {'files': [], 'error': ''}
+    result = {'file_list': [], 'error': ''}
     if not dir_exists(path):
         result['error'] = 'path not exists'
         return result
-    result['files'] = [file.name for file in os.scandir(path) if file.is_file()]
+    result['file_list'] = [file.name for file in os.scandir(path) if file.is_file()]
     return result
 
 
-def get_dir_item_count(path) -> dict:
+def get_total_items(path) -> dict:
     """
     Total number of child elements in the directory.
     :param path:
     :return: Dict:
-            ['count']: number of child items in the directory;
+            ['total_items']: number of child items in the directory;
             ['error']: empty string if success or error message otherwise;
     """
-    result = {'count': 0, 'error': ''}
+    result = {'total_items': 0, 'error': ''}
     if not dir_exists(path):
         result['error'] = 'path not exists'
         return result
-    result['count'] = len([item.name for item in os.scandir(path)])
+    result['total_items'] = len([item.name for item in os.scandir(path)])
     return result
 
 
@@ -299,31 +323,37 @@ def dir_empty(path) -> bool:
     """
     Check if directory is empty.
     :param path:
-    :return: True or False
+    :return: True if dir is empty or does not exist, False if dir exists and not empty
     """
-    return not get_dir_item_count(path)['count']
+    if os.path.exists(path) and os.path.isdir(path):
+        if not os.listdir(path):
+            return True
+        else:
+            return False
+    return True
 
 
-def get_filesystem_item_type(path) -> dict:
+def get_item_type(path) -> dict:
     """
     Type of the file system item.
     Supported type names: 'file', 'dir, 'symlink'
     :param path:
     :return: Dict:
-            ['type']: string that describes the type; empty string is returned if type is unknown or item
+            ['item_type']: string that describes the type; empty string is returned if type is unknown or item
                             does not exist;
             ['exists']: boolean - True if item exists or false otherwise.
     """
-    result = {'exists': False, 'type': ''}
-    if file_exists(path):
+    result = {'exists': False, 'item_type': ''}
+    if symlink_exists(path):  # symlink must be first because symlink is also a file
         result['exists'] = True
-        result['type'] = 'file'
+        result['item_type'] = 'symlink'
+    elif file_exists(path):
+        result['exists'] = True
+        result['item_type'] = 'file'
     elif dir_exists(path):
         result['exists'] = True
-        result['type'] = 'dir'
-    elif symlink_exists(path):
-        result['exists'] = True
-        result['type'] = 'symlink'
+        result['item_type'] = 'dir'
+
     return result
 
 
