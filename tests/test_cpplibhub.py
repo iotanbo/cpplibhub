@@ -16,3 +16,4 @@ def test_main(runner):
     # result = runner.invoke(main, ['--name', 'Amy'])
     assert result.exit_code == 0
     # assert result.output == 'Hello Amy!\n'
+    # TODO: test more command line options and args
